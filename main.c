@@ -9,7 +9,7 @@ int main() {
     hashmap_t hashtable[HASH_SIZE];
     //int num_misspelled = check_words(text_file, hashtable, misspelled);
     bool success = load_dictionary("/home/rob/appsecurity/app-security/wordlist.txt", hashtable);
-    printf("%d\n", success);
+    //printf("%d\n", success);
     //char *word2 = "semicolons";
     //bool test = check_word(word2, hashtable);
     //printf("%d\n", test);

@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/project1.dir/dictionary.c.o CMakeFiles/project1.dir/main.c.o CMakeFiles/project1.dir/spell.c.o  -o project1 
