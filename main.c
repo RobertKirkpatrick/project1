@@ -19,6 +19,6 @@ int main() {
     printf("%d\n", miss);
     //check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[])
 
-
+    fclose(fp);
     return 0;
 }

@@ -82,9 +82,9 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[])
                     word[i]=0;
                     j++;
                 }
-                else if (ispunct(word[i]) ){ //skip character
+                /*else if (ispunct(word[i]) ){ //skip character
                     word[i]=0;
-                }
+                }*/
                 else{
                     word[i]=0;
                 }
@@ -146,6 +146,7 @@ bool check_word(const char* word, hashmap_t hashtable[])
     }return false;
 
 
+
 }
 
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
@@ -198,11 +199,13 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
                 line[i]=0;
                 j++;
             }
-            else if (ispunct(line[i]) ){ //skip character
+            /*else if (ispunct(line[i]) ){ //skip character
                 line[i]=0;
-            }
+            }*/
             else{
+                word_c[j] = line[i];
                 line[i]=0;
+                j++;
             }
 
         }
