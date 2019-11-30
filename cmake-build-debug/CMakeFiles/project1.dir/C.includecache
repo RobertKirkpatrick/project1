@@ -6,20 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/rob/appsecurity/project1/dictionary.c
-stdbool.h
--
-stdio.h
--
-stdlib.h
--
-string.h
--
-ctype.h
--
-dictionary.h
-/home/rob/appsecurity/project1/dictionary.h
-
 /home/rob/appsecurity/project1/dictionary.h
 stdbool.h
 -

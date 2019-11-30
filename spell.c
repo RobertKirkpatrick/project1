@@ -41,42 +41,94 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[])
 {
     //Set int num_misspelled to 0.
     int num_misspelled = 0;
-    while(num_misspelled <MAX_MISSPELLED) {
-        char* word = calloc(LENGTH+ 1,sizeof(char));
+    char* word = calloc(LENGTH+ 1,sizeof(char));
+    char* word_c = calloc(LENGTH+ 1,sizeof(char));
+    char* word_lower = calloc(LENGTH+ 1,sizeof(char));
+    char buffer[10];
+    sprintf(buffer, "%%%is", LENGTH);
 
+    if (fp == NULL) {
+        printf("No file found");
+        exit(0);
+    }
+
+    fscanf(fp,buffer,word);
+
+
+
+    do{
         //While line in fp is not EOF (end of file):
 
-        if (fp == NULL) {
-            printf("No file found");
-            exit(0);
+        int i=0;
+        int j=0;
+        int a = strlen(word);
+        /*if(word[a-1] =='\n'){
+            word[a-1]='\0';
+
+        }*/
+        //clean up the word
+        for(i=0; i<a+1; i++){
+            if (isalpha(word[i])){
+                word_c[j] = word[i];
+                word_lower[j] = word[i];
+                word_c[j+1]='\0';
+                word_lower[j+1] ='\0';
+;                j++;
+            }
+            else if ((ispunct(word[i])) && ( i < 1 || i == a-1)) { //skip character
+                j++;
+                //printf("punction is %c, word is %s \n", word[i], word);
+            }
+            else{
+                word_c[j] = word[i];
+                word_lower[j] = word[i];
+                word_c[j+1]='\0';
+                word_lower[j+1] ='\0';
+                j++;
+            }
+
+            if (isupper(word[i]) && i==0) {
+                word_lower[i] = tolower(word_lower[i]);
+            }
+            //printf("lowered word is %s \n", word_lower);
         }
-        fscanf(fp,"%45s",word);
-        while(!feof(fp))
-        {   //Read the line.
 
-            //printf("%s\n", word_c);
 
-            //If not check_word(word):
-            //append word to misspelled.
-            //Increment num_misspelled.
-            if(!check_word(word, hashtable)){
-                //printf("%s\n", word);
-                misspelled[num_misspelled] = word;
+        //Read the line.
+
+        //printf("%s\n", word_c);
+
+        //printf("lowered word is %s \n", word_lower);
+        //printf("clean word is %s \n", word_c);
+        //If not check_word(word):
+        //append word to misspelled.
+        //Increment num_misspelled.
+        if(!check_word(word_c, hashtable)) {
+            if(!check_word(word_lower, hashtable))
+            {
+
+                //printf("number misspelled is %i\n", num_misspelled);
+                //printf("word is %s \n",word_lower);
+                misspelled[num_misspelled] = calloc(LENGTH+ 1,sizeof(char));
+                strcpy(misspelled[num_misspelled], word_lower);
                 num_misspelled++;
                 //printf("%i \n", num_misspelled);
 
             }
-
-
-            fscanf(fp,"%45s",word);
-        }
-        //fclose(fpr);
-
-        return num_misspelled;
     }
 
-    //}
 
+
+    //fclose(fpr);
+    /*for (i=0; i <num_misspelled;i++){
+        printf("Misspelled[%i] is: %s", i, misspelled[i]);
+    }*/
+
+    }while(num_misspelled <MAX_MISSPELLED && fscanf(fp,buffer,word)==1);
+
+    free(word);
+    free(word_c);
+    free(word_lower);
     return num_misspelled;
 }
 
@@ -85,39 +137,25 @@ bool check_word(const char* word, hashmap_t hashtable[])
 {
     //printf("%s \n", word);
     //char* word_d = calloc(LENGTH+ 1,sizeof(char));
-    char* word_c = calloc(LENGTH+ 1,sizeof(char));
+
     //word_d = word;
     ////codeblock for cleaning up the word////
     //For each word in line:
-    //Remove punctuation from beginning and end of word.
-    int i=0;
-    int j=0;
+
     int a = strlen(word);
     //cleanup line read, make all characters 0 at the newline
-
-    for(i=0; i<LENGTH+1; i++){
-        if (isupper(word[i])) {
-            word_c[j] = tolower(word[i]);
-            //word[i]=0;
-            j++;
-        }
-        else if (isalpha(word[i])){
-            word_c[j] = word[i];
-            //word[i]=0;
-            j++;
-        }
-        else if ((ispunct(word[i])) && ( i < 1 || i == a-1)) { //skip character
-            j++;
-        }
-        else{
-            word_c[j] = word[i];
-            j++;
-        }
+    if(a > LENGTH){
+        return false;
     }
-    //printf("%s \n", word_c);
+
+
+    //printf("word is::%s \n", word);
+    //printf("word clean:%s \n", word_c);
+    //printf("word lower:%s \n", word_lower);
     //Set int bucket to the output of hash_function(word).
-    int bucket = hash_function(word_c);
-    //Set hashmap_t cursor equal to hashmap[bucket].
+    int bucket = hash_function(word);
+
+    //Set hashmap_t cursor equal to hashmap[bucket]
     hashmap_t cursor = (node*) malloc(sizeof(node));
     cursor = hashtable[bucket];
 
@@ -129,18 +167,23 @@ bool check_word(const char* word, hashmap_t hashtable[])
         //If word equals cursor->word:
         while(cursor != NULL ){
 
-            if( strcmp( cursor ->word, word_c)==0) {//this is failing when it should be true
-                //printf("cursor word: %s \n", cursor->word);
+            if( (strcmp( cursor ->word, word)==0) ){
+                //printf("cleaned word hit: %s \n", word_c);
+                if(strcmp(cursor->word, word)==0){
+                    //printf("lowered word hit: %s \n", word_lower);
+                    return true;
 
-                return true;
+                }
+
             }
 
             //Set cursor to cursor->next.*/
             cursor = cursor -> next;
 
         }
-    }return false;
+    }
 
+    return false;
 
 
 }
@@ -159,82 +202,29 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
         printf("No file found");
         exit(0);
     }
-    /*
-    ///check for buffer overflow
-    char * fbuffer;
-    size_t test;
-    long buff;
-
-    fseek(fp, 0, SEEK_END);
-    buff = ftell(fp);
-    rewind(fp);
-    fbuffer = (char*)malloc(sizeof(char)*buff);
-    if(fbuffer == NULL){
-        exit(1);
-    }
-    */
-    ///end buffer overflow check
 
     //Start reading in lines
     //initial character for line read
     //char *line = (char*) malloc(sizeof(char) * LENGTH);
     char* line = calloc(LENGTH+ 1,sizeof(char));
 
-
-
-    //hashmap_t curr = (node*) malloc(sizeof(node));
-
     while(fgets(line,LENGTH, fp) != NULL){
         // For each line, get the word
         //initialize char for cleaned up word
         //char *word_c = (char*) malloc(sizeof(char) * LENGTH);
-        char* word_c = calloc(LENGTH+ 1,sizeof(char));
-        //printf("%s\n", line);
-
         //malloc new node
         hashmap_t new_node = (node*) malloc(sizeof(node));
-
-        ////codeblock for cleaning up the word////
-
-        int i=0;
-        int j=0;
-        int a = strlen(line);
-        //cleanup line read, make all characters 0 at the newline
-
-        for(i=0; i<LENGTH+1; i++){
-            if (isupper(line[i])) {
-                word_c[j] = tolower(line[i]);
-                line[i]=0;
-                j++;
-            }
-            else if (isalpha(line[i])) {
-                word_c[j] = line[i];
-                line[i] = 0;
-                j++;
-            }
-            else if ((ispunct(line[i])) && ( i < 1 || i == a-1)) { //skip character
-                line[i] = 0;
-                j++;
-            }
-            else if(line[i]=='\n') {
-                line[i] = 0;
-                j++;
-            }
-            else{
-                word_c[j]=line[i];
-                line[i]=0;
-                j++;
-            }
+        int len = strlen(line);
+        //remove the new line character from using fgets//
+        if(line[len-1] =='\n'){
+            line[len-1]='\0';
 
         }
 
-        //printf("%s \n", word_c);
-
         new_node -> next = NULL;
-        strncpy(new_node -> word, word_c, LENGTH);
+        strncpy(new_node -> word, line, LENGTH);
         //printf("%s \n", new_node -> word );
-        bucket = hash_function(word_c);
-        //curr = hashtable[bucket];
+        bucket = hash_function(line);
 
         if (hashtable[bucket] == NULL) //if there isn't a word, then add it and point to null
         {
@@ -247,22 +237,17 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
 
         }else
         {
-            /*code for adding to end of list
 
-            while(curr-> next != NULL){
-                curr = curr->next;
-            }curr ->next = new_node;*/
-            //Add node to front of list, and
+            //Add node to front of list
             new_node->next = hashtable[bucket];
             hashtable[bucket] = new_node;
 
             //hashtable[bucket]=curr;
             //printf("%s\n", hashtable[bucket]->word);
         }
-        free(word_c);
     }
 
-    //free(fbuffer);
+    free(line);
     fclose(fp);
 
     return true;

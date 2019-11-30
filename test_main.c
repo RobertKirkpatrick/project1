@@ -42,6 +42,7 @@ START_TEST(test_check_words_normal)
     bool test = strlen(misspelled[0]) == strlen(expected[0]);
     int len1 = strlen(misspelled[0]);
     int len2 = strlen(expected[0]);
+    printf("test of length %d!=%d", len1, len2);
     ck_assert_msg(test, "%d!=%d", len1, len2);
     ck_assert_msg(strcmp(misspelled[0], expected[0]) == 0);
     ck_assert_msg(strcmp(misspelled[1], expected[1]) == 0);
