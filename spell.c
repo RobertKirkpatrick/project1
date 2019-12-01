@@ -172,7 +172,7 @@ bool check_word(const char* word, hashmap_t hashtable[])
 
         }
     }
-
+    free(cursor);
     return false;
 
 
@@ -201,7 +201,6 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
     while(fgets(line,LENGTH, fp) != NULL){
         // For each line, get the word
         //initialize char for cleaned up word
-        //char *word_c = (char*) malloc(sizeof(char) * LENGTH);
         //malloc new node
         hashmap_t new_node = (node*) malloc(sizeof(node));
         int len = strlen(line);
@@ -233,6 +232,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
             //hashtable[bucket]=curr;
             //printf("%s\n", hashtable[bucket]->word);
         }
+
     }
 
     free(line);

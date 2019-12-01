@@ -11,6 +11,9 @@ int main(int argc, char **argv) {
     int i;
     char *filetest = argv[1];
     char *wordlist =argv[2];
+    hashmap_t cursor;
+    hashmap_t next;
+
     FILE* fp = fopen(filetest, "r");
 
     //int num_misspelled = check_words(text_file, hashtable, misspelled);
@@ -31,6 +34,18 @@ int main(int argc, char **argv) {
     //check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[])
     //fclose(fp2);
     fclose(fp);
+    //free hashtable
+    for(i=0; i <HASH_SIZE; i++){
+        cursor = hashtable[i];
+        while(cursor != NULL){
+            next = cursor->next;
+            free(cursor);
+            cursor = next;
+
+        }
+    }
+
+    //free misspelled array
     for(i = 0; i< MAX_MISSPELLED; i++){
         if(misspelled[i] !=NULL){
             free(misspelled[i]);
