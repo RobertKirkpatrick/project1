@@ -135,12 +135,6 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[])
 //function to check if a word is correctly spelled
 bool check_word(const char* word, hashmap_t hashtable[])
 {
-    //printf("%s \n", word);
-    //char* word_d = calloc(LENGTH+ 1,sizeof(char));
-
-    //word_d = word;
-    ////codeblock for cleaning up the word////
-    //For each word in line:
 
     int a = strlen(word);
     //cleanup line read, make all characters 0 at the newline
@@ -148,10 +142,6 @@ bool check_word(const char* word, hashmap_t hashtable[])
         return false;
     }
 
-
-    //printf("word is::%s \n", word);
-    //printf("word clean:%s \n", word_c);
-    //printf("word lower:%s \n", word_lower);
     //Set int bucket to the output of hash_function(word).
     int bucket = hash_function(word);
 
@@ -231,9 +221,7 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]) {
             //new_node is assigned the word, and pointer next
 
             hashtable[bucket]= new_node;
-            //hashtable[bucket] = new_node;
-            //printf("%i\n", bucket);
-            //printf("%s\n", (hashtable[bucket]->word));
+
 
         }else
         {
