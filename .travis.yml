@@ -1,0 +1,7 @@
+language: C
+compiler:
+  - gcc
+script:
+  - sudo apt-get update
+  - sudo apt-get install check
+  - make test
