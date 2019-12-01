@@ -21,9 +21,12 @@ START_TEST(test_check_word_normal)
     load_dictionary(DICTIONARY, hashtable);
     const char* correct_word = "Justice";
     const char* punctuation_word_2 = "pl.ace";
+    const char* questionmark ="?thisisatest";
     ck_assert(check_word(correct_word, hashtable));
     ck_assert(!check_word(punctuation_word_2, hashtable));
     // Test here: What if a word begins and ends with "?
+    ck_assert(!check_word(questionmark, hashtable));
+    
 }
 END_TEST
 
