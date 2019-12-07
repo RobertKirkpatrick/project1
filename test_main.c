@@ -4,6 +4,8 @@
 
 #define DICTIONARY "wordlist.txt"
 #define TESTDICT "test_worlist.txt"
+#define EMPTY "empty.txt"
+#define NOFILE "thisisnotafile.txt"
 
 START_TEST(test_dictionary_normal)
 {
@@ -21,6 +23,7 @@ START_TEST(test_dictionary_normal)
     ck_assert_msg(strcmp(hashtable[1]->word, expected[1]) == 0);
     ck_assert_msg(strcmp(hashtable[2]->word, expected[2]) == 0);
     ck_assert_msg(strcmp(hashtable[3]->word, expected[3]) == 0);
+    //free(hashtable);
 }
 END_TEST
 
@@ -39,6 +42,24 @@ START_TEST(test_check_word_normal)
     ck_assert(!check_word(questionmark2, hashtable));
 
 }
+END_TEST
+
+START_TEST(test_dictionary_empty)
+    {
+        hashmap_t hashtable[HASH_SIZE];
+        ck_assert(load_dictionary(TESTDICT, hashtable));
+
+
+    }
+END_TEST
+
+START_TEST(test_dictionary_nofile)
+    {
+        hashmap_t hashtable[HASH_SIZE];
+        ck_assert(load_dictionary(NOFILE, hashtable));
+
+
+    }
 END_TEST
 
 START_TEST(test_check_words_normal)
@@ -73,6 +94,8 @@ check_word_suite(void)
     check_word_case = tcase_create("Core");
     tcase_add_test(check_word_case, test_check_word_normal);
     tcase_add_test(check_word_case, test_check_words_normal);
+    tcase_add_test(check_word_case, test_dictionary_empty);
+    tcase_add_test(check_word_case, test_dictionary_nofile);
     suite_add_tcase(suite, check_word_case);
 
     return suite;
