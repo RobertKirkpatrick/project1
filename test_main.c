@@ -99,6 +99,19 @@ START_TEST(test_check_words_normal)
 }
 END_TEST
 
+START_TEST(test_check_words_BO)
+    {
+        hashmap_t hashtable[HASH_SIZE];
+        load_dictionary(DICTIONARY, hashtable);
+
+        char *misspelled[MAX_MISSPELLED];
+        FILE *fp = fopen("test2.txt", "r");
+        int num_misspelled = check_words(fp, hashtable, misspelled);
+        ck_assert(num_misspelled == 1);
+
+    }
+END_TEST
+
 Suite *
 check_word_suite(void)
 {
@@ -111,6 +124,7 @@ check_word_suite(void)
     tcase_add_test(check_word_case, test_dictionary_empty);
     tcase_add_test(check_word_case, test_dictionary_nofile);
     tcase_add_test(check_word_case, test_check_words_maxmisspelled);
+    tcase_add_test(check_word_case, test_check_words_BO);
     suite_add_tcase(suite, check_word_case);
 
     return suite;

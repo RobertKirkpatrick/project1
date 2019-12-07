@@ -56,75 +56,70 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[])
 
 
 
-    do{
+    do {
         //While line in fp is not EOF (end of file):
 
-        int i=0;
-        int j=0;
+
         int a = strlen(word);
-        /*if(word[a-1] =='\n'){
-            word[a-1]='\0';
+        if (a < LENGTH) {
+            int i = 0;
+            int j = 0;
+            //clean up the word
+            for (i = 0; i < a + 1; i++) {
+                if (isalpha(word[i])) {
+                    word_c[j] = word[i];
+                    word_lower[j] = word[i];
+                    word_c[j + 1] = '\0';
+                    word_lower[j + 1] = '\0';;
+                    j++;
+                } else if ((ispunct(word[i])) && (i < 1 || i == a - 1)) { //skip character
+                    j++;
+                    //printf("punction is %c, word is %s \n", word[i], word);
+                } else {
+                    word_c[j] = word[i];
+                    word_lower[j] = word[i];
+                    word_c[j + 1] = '\0';
+                    word_lower[j + 1] = '\0';
+                    j++;
+                }
 
-        }*/
-        //clean up the word
-        for(i=0; i<a+1; i++){
-            if (isalpha(word[i])){
-                word_c[j] = word[i];
-                word_lower[j] = word[i];
-                word_c[j+1]='\0';
-                word_lower[j+1] ='\0';
-;                j++;
-            }
-            else if ((ispunct(word[i])) && ( i < 1 || i == a-1)) { //skip character
-                j++;
-                //printf("punction is %c, word is %s \n", word[i], word);
-            }
-            else{
-                word_c[j] = word[i];
-                word_lower[j] = word[i];
-                word_c[j+1]='\0';
-                word_lower[j+1] ='\0';
-                j++;
+                if (isupper(word[i]) && i == 0) {
+                    word_lower[i] = tolower(word_lower[i]);
+                }
+                //printf("lowered word is %s \n", word_lower);
             }
 
-            if (isupper(word[i]) && i==0) {
-                word_lower[i] = tolower(word_lower[i]);
-            }
+
+            //Read the line.
+
+            //printf("%s\n", word_c);
+
             //printf("lowered word is %s \n", word_lower);
-        }
+            //printf("clean word is %s \n", word_c);
+            //If not check_word(word):
+            //append word to misspelled.
+            //Increment num_misspelled.
+            if (!check_word(word_c, hashtable)) {
+                if (!check_word(word_lower, hashtable)) {
 
+                    //printf("number misspelled is %i\n", num_misspelled);
+                    //printf("word is %s \n",word_lower);
+                    misspelled[num_misspelled] = calloc(LENGTH + 1, sizeof(char));
+                    strcpy(misspelled[num_misspelled], word_lower);
+                    num_misspelled++;
+                    //printf("%i \n", num_misspelled);
 
-        //Read the line.
-
-        //printf("%s\n", word_c);
-
-        //printf("lowered word is %s \n", word_lower);
-        //printf("clean word is %s \n", word_c);
-        //If not check_word(word):
-        //append word to misspelled.
-        //Increment num_misspelled.
-        if(!check_word(word_c, hashtable)) {
-            if(!check_word(word_lower, hashtable))
-            {
-
-                //printf("number misspelled is %i\n", num_misspelled);
-                //printf("word is %s \n",word_lower);
-                misspelled[num_misspelled] = calloc(LENGTH+ 1,sizeof(char));
-                strcpy(misspelled[num_misspelled], word_lower);
-                num_misspelled++;
-                //printf("%i \n", num_misspelled);
-
+                }
             }
-    }
 
 
 
-    //fclose(fpr);
-    /*for (i=0; i <num_misspelled;i++){
-        printf("Misspelled[%i] is: %s", i, misspelled[i]);
-    }*/
-
-    }while(num_misspelled <MAX_MISSPELLED && fscanf(fp,buffer,word)==1);
+            //fclose(fpr);
+            /*for (i=0; i <num_misspelled;i++){
+                printf("Misspelled[%i] is: %s", i, misspelled[i]);
+            }*/
+        }
+    }while (num_misspelled < MAX_MISSPELLED && fscanf(fp, buffer, word) == 1);
 
     free(word);
     free(word_c);
