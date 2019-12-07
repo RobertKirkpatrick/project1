@@ -12,6 +12,15 @@ START_TEST(test_dictionary_normal)
     // Here we can test if certain words ended up in certain buckets
     // to ensure that our load_dictionary works as intended. I leave
     // this as an exercise.
+    char* expected[4];
+    expected[0] = "first";
+    expected[1] = "second";
+    expected[2] = "third";
+    expected[3] = "test";
+    ck_assert_msg(strcmp(hashtable[0]->word, expected[0]) == 0);
+    ck_assert_msg(strcmp(hashtable[1]->word, expected[1]) == 0);
+    ck_assert_msg(strcmp(hashtable[2]->word, expected[2]) == 0);
+    ck_assert_msg(strcmp(hashtable[3]->word, expected[3]) == 0);
 }
 END_TEST
 
