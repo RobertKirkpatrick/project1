@@ -7,6 +7,7 @@
 #define EMPTY "empty.txt"
 #define NOFILE "thisisnotafile.txt"
 #define TALE "a_tale_of_two_cities.txt"
+#define LONG "test3.txt"
 
 START_TEST(test_dictionary_normal)
 {
@@ -102,12 +103,25 @@ END_TEST
 START_TEST(test_check_words_BO)
     {
         hashmap_t hashtable[HASH_SIZE];
-        load_dictionary(DICTIONARY, hashtable);
+        load_dictionary(TALE, hashtable);
 
         char *misspelled[MAX_MISSPELLED];
         FILE *fp = fopen("test2.txt", "r");
         int num_misspelled = check_words(fp, hashtable, misspelled);
         ck_assert(num_misspelled == 1);
+
+    }
+END_TEST
+
+START_TEST(test_check_words_long)
+    {
+        hashmap_t hashtable[HASH_SIZE];
+        load_dictionary(LONG, hashtable);
+
+        char *misspelled[MAX_MISSPELLED];
+        FILE *fp = fopen("test3.txt", "r");
+        int num_misspelled = check_words(fp, hashtable, misspelled);
+        ck_assert(num_misspelled == 0);
 
     }
 END_TEST
@@ -125,6 +139,7 @@ check_word_suite(void)
     tcase_add_test(check_word_case, test_dictionary_nofile);
     tcase_add_test(check_word_case, test_check_words_maxmisspelled);
     tcase_add_test(check_word_case, test_check_words_BO);
+    tcase_add_test(check_word_case, test_check_words_long);
     suite_add_tcase(suite, check_word_case);
 
     return suite;
