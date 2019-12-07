@@ -6,6 +6,7 @@
 #define TESTDICT "test_worlist.txt"
 #define EMPTY "empty.txt"
 #define NOFILE "thisisnotafile.txt"
+#define TALE "a_tale_of_two_cities.txt"
 
 START_TEST(test_dictionary_normal)
 {
@@ -62,6 +63,19 @@ START_TEST(test_dictionary_nofile)
     }
 END_TEST
 
+START_TEST(test_check_words_maxmisspelled)
+    {
+        hashmap_t hashtable[HASH_SIZE];
+        load_dictionary(DICTIONARY, hashtable);
+        char *misspelled[MAX_MISSPELLED];
+        FILE *fp = fopen("a_tale_of_two_cities.txt", "r");
+        int num_misspelled = check_words(fp, hashtable, misspelled);
+
+        ck_assert(num_misspelled == MAX_MISSPELLED);
+
+    }
+END_TEST
+
 START_TEST(test_check_words_normal)
 {
     hashmap_t hashtable[HASH_SIZE];
@@ -96,6 +110,7 @@ check_word_suite(void)
     tcase_add_test(check_word_case, test_check_words_normal);
     tcase_add_test(check_word_case, test_dictionary_empty);
     tcase_add_test(check_word_case, test_dictionary_nofile);
+    tcase_add_test(check_word_case, test_check_words_maxmisspelled);
     suite_add_tcase(suite, check_word_case);
 
     return suite;
